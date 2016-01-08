@@ -74,4 +74,3 @@ if(Meteor.isServer){
 }
 
 Todos = new Mongo.Collection('todos');
-
