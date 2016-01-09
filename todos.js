@@ -2,7 +2,8 @@ if(Meteor.isClient){
   Template.todos.helpers({
     'todo': function(){
         var currentList = this._id;
-        return Todos.find({ listId: currentList }, {sort: {createdAt: -1}});
+        var currentUser = Meteor.userId();
+        return Todos.find({ listId: currentList, createdBy: currentUser }, {sort: {createdAt: -1}});
     }
   });
 
@@ -10,11 +11,13 @@ if(Meteor.isClient){
         'submit form': function(event){
             event.preventDefault();
             var todoName = $('[name="todoName"]').val();
+            var currentUser = Meteor.userId();
             var currentList = this._id;
             Todos.insert({
                 name: todoName,
                 completed: false,
                 createdAt: new Date(),
+                createdBy: currentUser,
                 listId: currentList
             });
             $('[name="todoName"]').val('');

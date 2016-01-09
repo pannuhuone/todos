@@ -14,9 +14,11 @@ if(Meteor.isClient) {
         'submit form': function(event){
             event.preventDefault();
             var listName = $('[name=listName]').val();
+            var currentUser = Meteor.userId();
             Lists.insert({
-                name: listName },
-                function(error, results){
+                name: listName,
+                createdBy: currentUser
+            }, function(error, results){
                     Router.go('listPage', {_id: results });
                 });
             $('[name=listName]').val('');
@@ -25,7 +27,8 @@ if(Meteor.isClient) {
 
     Template.lists.helpers({
         'list': function(){
-            return Lists.find({}, {sort: {name: 1}});
+            var currentUser = Meteor.userId();
+            return Lists.find({ createdBy: currentUser }, {sort: {name: 1}});
         }
     });
 }
