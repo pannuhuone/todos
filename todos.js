@@ -1,11 +1,15 @@
 if(Meteor.isClient){
-  Template.todos.helpers({
-    'todo': function(){
-        var currentList = this._id;
-        var currentUser = Meteor.userId();
-        return Todos.find({ listId: currentList, createdBy: currentUser }, {sort: {createdAt: -1}});
-    }
-  });
+    // Subcribes
+    //Meteor.subscribe('todos');
+
+    // Templates
+    Template.todos.helpers({
+        'todo': function(){
+            var currentList = this._id;
+            var currentUser = Meteor.userId();
+            return Todos.find({ listId: currentList, createdBy: currentUser }, {sort: {createdAt: -1}});
+        }
+    });
 
     Template.addTodo.events({
         'submit form': function(event){
@@ -78,7 +82,10 @@ if(Meteor.isClient){
 
 
 if(Meteor.isServer){
-
+    Meteor.publish('todos', function(currentList){
+        var currentUser = this.userId;
+        return Todos.find({ createdBy: currentUser, listId: currentList });
+    });
 }
 
 Todos = new Mongo.Collection('todos');
